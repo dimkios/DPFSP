@@ -13,5 +13,13 @@ import time
 #********************************************************************************************************
 
 
+#ΕΠΙΛΟΓΗ DATASET
+
+
+#ΦΟΡΤΩΣΗ DATASET
 n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta012_6.txt')
 #lf.read_dpfsp_dataset('./dataSet/Small/test.txt')
+
+#ΕΠΙΛΟΓΗ ΑΛΓΟΡΙΘΜΟΥ
+
+#ΕΞΑΓΩΓΗ ΔΕΔΟΜΕΝΩΝ
