@@ -28,22 +28,20 @@ def read_dpfsp_dataset(txtfile):
     with open(txtfile, 'r') as fl:
         lines = fl.readlines()
     n, m = map(int, lines[0].split()) 
-    F = lines[1]
+    F = int(lines[1])
     for j in range(n+1):
-        for i, t in enumerate(lines[j+1].split()[1::2]):
-            p[j,i]=int(t)
-            print(p[j,i])
+        for i, t in enumerate(map(int, lines[j+1].split()[1::2])):
+            p[j-1,i]=int(t)
+                     
     print("----------------------------")
     for j in range(n):
-        for i, duetime in enumerate(lines[j+3+n].split()):
-            d[i]=int(duetime)
-            print(d[i])        
-        #x = f.readlines()[2:12]
-        #x2 = map(int, x.split())
+        for i, duetime in enumerate(map(int, lines[j+3+n].split())):
+            d[j]=int(duetime)
+                    
     #print(x2)
     print("----------------------------")
-    print(n)
-    print(m)  
-    print(F)    
+    #print(n)
+    #print(m)  
+    #print(F)    
 
     return n, m, F, p, d
