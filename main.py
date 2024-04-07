@@ -4,16 +4,14 @@ import nehedd as nh
 import ect_solution as ect
 import time
 
-
-
-
 #ΕΠΙΛΟΓΗ DATASET
 
 
 #ΦΟΡΤΩΣΗ DATASET
-#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta012_6.txt')
+n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta012_6.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_1.txt')
-n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/test.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_4_8_3_2.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/test.txt')
 print(n)
 print(F)
 
@@ -34,3 +32,5 @@ ect.ect_solution(d,n,m,p,F)
 #ΕΠΙΛΟΓΗ ΑΛΓΟΡΙΘΜΟΥ
 
 #ΕΞΑΓΩΓΗ ΔΕΔΟΜΕΝΩΝ
+
+
