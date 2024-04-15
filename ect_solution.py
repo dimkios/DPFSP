@@ -1,5 +1,4 @@
 import numpy as np
-import random
 
 #=======================================================================================================
 #                    ΠΡΟΓΡΑΜΜΑ ΜΕΤΑΠΤΥΧΙΑΚΩΝ ΣΠΟΥΔΩΝ ΠΛΗΡΟΦΟΡΙΚΗΣ ΚΑΙ ΔΙΚΤΥΩΝ
@@ -13,33 +12,29 @@ import random
 #                                           main.py
 #********************************************************************************************************
 #                           Solution based on earlier completion time 
-#
+# Επιλέγουμε μια τυχαία ακολουθία. Στη συνέχεια επιλέγουμε τις εργασίες σύμφωνα με την συγκεκριμένη ακολουθία.
+# Επιλέγουμε την πρώτη εργασία και την τοποθετούμε στο πρώτο εργοστάσιο. Έπειτα επιλέγουμε την δεύτερη 
+# ακολουθία και επιλέγουμε την καλύτερη θέση μεταξύ του πρώτου εργοστασίου και του δεύτερου. Επειδή 
+# το δεύτερο εργοαστάσιο είναι άδειο θα επιλεγεί το άδειο εργοστάσιο. Όταν όλα τα εργοστάσια θα έχουν από
+# μια εργασία, η επόπενη θα τοποθετηθεί ως επόμενη εργασία στο εργοστάσιο στο οποίο και θα εκτελεστεί πιο
+# γρήγορα. Το ίδιο θα γίνει για όλες τις εργασίες.
 #========================================================================================================
 
-def ect_solution(duedate, jobs, machines, p, Factories):
-    startSeq = {}
-    startSeq = [4,3,2,1,0]
+def ect_solution(duedate, jobs, machines, p, Factories, startSeq):
+    #startSeq = {}
+    #startSeq = [4,3,2,1,0]          #Τυχαία επιλογή ακολουθίας
     #startSeq = [4,3,2,1,0]
-    startSeq = [19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0]
+    #startSeq = [19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0]
     #startSeq = [0,1,2,3,4,5,6,7]
-    FactorySeq={}
-    FactoryRound={}
-    FactoryPointer={}
-    FactoryC={}
-    timi = 0
-    #FactoryMJ={}
-    #best_Ect = float("inf")
-
-    print(jobs,machines, Factories)
-
-    C = np.zeros((jobs, machines))
+    FactorySeq={}                   #Ακολουθία που προκύπτει για κάθε εργοστάσιο
+    FactoryRound={}                 #Χρόνος εκτέλεσης των εργασιών ενός εργοστασίαυ
+    FactoryPointer={}               #Δείκτης της τρέχουσας θέσης ενός εργοστασίου. Εξαρτάται από τις εργασίες που τοποθετούντε κάθε φορά σε ένα εργοστάσιο
+    FactoryC={}                     #Χρόνοι εκτέλεσης των εργασιών σε ένα εργοστάστιο για μια συγκεκριμένη εργασία
 
     for j in range(Factories):
         FactoryC[j] = np.zeros((jobs, machines))
         FactorySeq[j] = []
         FactoryRound[j] = []
-
-  
 
     for idx, j in enumerate(startSeq):
         for f in range(Factories):
@@ -66,22 +61,27 @@ def ect_solution(duedate, jobs, machines, p, Factories):
             FactoryRound[f] = FactoryC[f][poi,i]
             FactoryPointer[f] = poi
             
-        print("=================================================================================")
-        print(FactoryRound)   
-        print(min(FactoryRound, key=FactoryRound.get))
+        #print("=================================================================================")
+        #print("FactoryRound, pointer", FactoryRound, poi)   
+        #print(min(FactoryRound, key=FactoryRound.get))
         
         bestinRound = min(FactoryRound, key=FactoryRound.get)
-        print("best in round =",bestinRound)
+        #print("best in round =",bestinRound)
         FactorySeq[bestinRound].append(j)
         for fctr in range(Factories):
             
             if fctr != bestinRound:
                 for imach in range(machines):
                     FactoryC[fctr][FactoryPointer[fctr], imach] = 0
-            print("Factory = ", fctr)
-            print("job=", j)
-            print(FactoryC[fctr])
-        print("*************************** end of Factories round ******************************")   
+            #print("Factory = ", fctr)
+            #print("job=", j)
+            #print(FactoryC[fctr])
+        #print("*************************** end of Factories round ******************************")   
 
-    for fctr in range(Factories):
-        print("Job Sequence on Factory: [ ",fctr," ]", FactorySeq[fctr])
+    #for fctr in range(Factories):
+    #    for ikkk, jkkk in enumerate(FactorySeq[fctr]):
+    #        print(ikkk, jkkk)
+    #S        print("Job Sequence on Factory: [ ",fctr," ]", FactorySeq[fctr][ikkk], FactoryC[fctr][ikkk][machines-1])
+
+
+    return FactorySeq, FactoryC

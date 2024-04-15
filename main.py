@@ -8,10 +8,12 @@ import time
 
 
 #ΦΟΡΤΩΣΗ DATASET
-n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta012_6.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta012_6.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_1.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_4_8_3_2.txt')
-#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/test.txt')
+n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/test.txt')
+
+startSeq = {}
 print(n)
 print(F)
 
@@ -23,11 +25,27 @@ for j in range(n):
     print("duedate = ",j, d[j], "", end="", flush=True) 
     print() 
 print("============================================")   
-#print(d)
+
+startSeq = nh.nehedd(d,n,m,p,F) 
+print(startSeq)
+
+ectSequence, ectC = ect.ect_solution(d,n,m,p,F,startSeq)
+dueDateFaultSum = 0
+dueDateFault = 0
 
 
+for fctr in range(F):
+        print("Job Sequence on Factory: [ ",fctr," ]", ectSequence[fctr]) #, ectC[ectSequence[fctr][-1], -1])
+        for idx, seq in enumerate(ectSequence[fctr]):
+             dueDateFault = 0
+             dueDateFault = ectC[fctr][idx, m-1] - d[seq]
+             if dueDateFault > 0:
+                  dueDateFaultSum += dueDateFault
+             print(seq, ectSequence[fctr][idx], ectC[fctr][idx, m-1], dueDateFault )
 
-ect.ect_solution(d,n,m,p,F)
+print("TOTAL TT = ", dueDateFaultSum)
+ #return C[job_sequence[-1], -1]
+
 #nh.nehedd(d,n,m,p,F)
 #ΕΠΙΛΟΓΗ ΑΛΓΟΡΙΘΜΟΥ
 
