@@ -30,19 +30,19 @@ def nehedd_2(duedate, jobs, machines, p, Factories):
         FactorySeq[j] = []
 
 
-
+    tmpSeq = startSeq
    
     workSequense = [startSeq[0]]
 
 
     bestTime=float("inf") #Δίνουμε αρχική τιμή στον καλύτερο χρόνο μια πολύ μεγάλη τιμή 
-    for i in range(0, jobs):      
+    for i in range(0, jobs):  
         for f in range(Factories):
             tmpTime=0
-            for n in range(0, jobs):
+            for idx, n in enumerate(tmpSeq):
                 tmpTime=0
                 if i != n:
-                    print("i=",i, "n=", n)
+                    #print("i=",i, "n=", n)
                     WorkSeq = [i,n]
                     FactoryC = cS.schedule(jobs, machines, p, WorkSeq)
                     #print(FactoryC)
@@ -59,6 +59,7 @@ def nehedd_2(duedate, jobs, machines, p, Factories):
                     if bestTime > tmpTime:
                         bestTime = tmpTime
                         bestSequense = WorkSeq
-                    #print("BEST TIME", bestTime)    
-                FactorySeq[f] =  bestSequense          
+            
+            FactorySeq[f] =  bestSequense 
+            #print(FactorySeq[f])         
     return FactorySeq

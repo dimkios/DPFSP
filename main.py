@@ -24,7 +24,7 @@ import time
 #ΕΠΙΛΟΓΗ DATASET
 
 #ΦΟΡΤΩΣΗ DATASET
-#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta012_6.txt')
+n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta012_6.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta083_4.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta012_6.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_1.txt')
@@ -33,7 +33,7 @@ import time
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_4_8_3_2.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_4_8_5_1.txt')
 
-n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/test.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/test.txt')
 
 startSeq = {}
 print(n)
@@ -143,9 +143,9 @@ print("TOTAL TT = ", dueDateFaultSum)
 # 2. Παίρνουμε την δεύτερη εργασία και την τοποθετούμε στο δεύτερο εργοστάσιο
 # 3. Παίρνουμε την τρίτη εργασία και την τοποθετούμε στο εργοστάσιο που έχουμε καλύτερο duedate error
 #********************************************************************************************************************
-startSeq = nhd2.nehedd_2(d,n,m,p,F) 
+#startSeq = nhd2.nehedd_2(d,n,m,p,F) 
 
-print("START SEQ=", startSeq)
+#print("START SEQ=", startSeq)
 
 
 
