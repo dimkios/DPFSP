@@ -151,7 +151,7 @@ print("TOTAL TT = ", dueDateFaultSum)
 #********************************************************************************************************************
 #startSeq = nhd2.nehedd_2(d,n,m,p,F) 
 
-#print("START SEQ=", startSeq)
+
 
 
 

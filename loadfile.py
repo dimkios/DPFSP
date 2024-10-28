@@ -28,7 +28,7 @@ def read_dpfsp_dataset(txtfile):
     with open(txtfile, 'r') as fl:
         lines = fl.readlines()
     n, m = map(int, lines[0].split()) 
-    F = int(lines[1])
+    F = int(lines[1]) 
     for j in range(n+1):
         for i, t in enumerate(map(int, lines[j+1].split()[1::2])):
             p[j-1,i]=int(t)
