@@ -16,6 +16,7 @@ import calcShedule as cS
 
 def nehedd(duedate, jobs, machines, p, Factories):
     startSeq = utils.sort_by_dueDates(duedate) #ΤΑΞΙΝΟΜΗΣΗ ΜΕ ΒΑΣΗ ΤΙΣ ΤΙΜΕΣ DUEDATES
+    #print(" ====== START SEQUENSE =", startSeq)
     FactorySeq={}
     FactoryC={}  
     WorkSeq={}
@@ -29,6 +30,7 @@ def nehedd(duedate, jobs, machines, p, Factories):
         tmpTime=0
         for j in range(0, i + 1):  
             tmpTime=0
+            #print("workSequense : [", workSequense,"] j=", j, " - startSeq[i] : ",  startSeq[i])
             WorkSeq = utils.insertion(workSequense, j, startSeq[i])
             #print(WorkSeq)
             FactoryC = cS.schedule(jobs, machines, p, WorkSeq)
@@ -49,4 +51,5 @@ def nehedd(duedate, jobs, machines, p, Factories):
 
     #Sprint(workSequense)
     
-    return workSequense
+    #return workSequense
+    return startSeq

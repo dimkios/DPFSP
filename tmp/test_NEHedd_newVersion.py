@@ -83,7 +83,7 @@ optimal_factories_schedule_result = [
         ]
     } for i, factory in enumerate(optimal_factories_schedule)
 ]
-#NEHDedd(jobs, F)
+NEHDedd(jobs, F)
 
 
 print("-----------------------------------------")
