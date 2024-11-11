@@ -2,6 +2,8 @@ import loadfile as lf
 
 import nehedd_new as nhd_n
 import calcShedule as cS
+import ils
+import rsls
 import time
 
 #=======================================================================================================
@@ -21,11 +23,20 @@ import time
 #ΕΠΙΛΟΓΗ DATASET
 
 #ΦΟΡΤΩΣΗ DATASET
-#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta012_6.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_1.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_2.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_3.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_4.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_5.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_1.txt')
+
+n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_3_8_2_1.txt')
+
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta001_2.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta083_4.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta012_6.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_1.txt')
-n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_8_5_1.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_8_5_1.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_6_2_1.txt')
 
 
@@ -34,7 +45,7 @@ n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_8_5_1.txt')
 
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_4_8_3_2.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_4_8_5_1.txt')
-n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_4_8_5_4.txt')
+#n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_4_8_5_4.txt')
 
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/test.txt')
 
@@ -60,6 +71,9 @@ for j in range(n):
     print() 
 print("============================================")   
 
+print("Factories:[", F, "] - Jobs: [", n, "] - machines: [", m ,"]")
+print()
+
 #************************************ SOLUTION neh update ******************************************************************
 #               ΥΠΟΛΟΓΙΣΜΟΣ ΤΗΣ ΚΑΛΥΤΕΡΗΣ ΑΚΟΛΟΥΘΙΑΣ ΣΥΜΦΩΝΑ ΜΕ ΤΟΝ NEHEDD όπως περιγράφεται στην εργασία
 # 1. Δημιουργείται η ακολουθία startSeq σύμφωνα με την ταξινόμηση με το duedate. 
@@ -69,23 +83,50 @@ print("============================================")
 # 5. Βρίσκουμε το εργοστάστιο με την μικρότερη καθυστέρηση
 # 6. Τοποθετούμε την εργασία στο εργοστάσιο με την μικρότερη καθυστέρηση στην κατάλληλη θέση
 #********************************************************************************************************************
-
+print("<---------  ΑΛΓΟΡΙΘΜΟΣ   N E H e d d --------->")
 startSeq = nhd_n.nehedd(d,n,m,p,F) 
-print("------------------------------------------------")
 
-sumTT = 0
-for fn in range(F):
-    FactoryC = cS.schedule(n, m, p, startSeq[fn])
-    print("FACTORY : [", fn ,"] -> ",startSeq[fn])
-    inTT = 0
-    for idJob, job in enumerate(startSeq[fn]):
-        inTT = FactoryC[startSeq[fn][idJob],-1] -  d[job]
-        if(inTT > 0):
-            sumTT = sumTT + inTT
-    sumTT - sumTT + sumTT
-print("SUMTT :", sumTT)
+bestTT = cS.calcTT(d,n,m,p,startSeq)
+print("FINAL BEST for N E H e d d : [", bestTT , "]")
+print()
+# print("------------------------------------------------")
 
 
-#ΕΞΑΓΩΓΗ ΔΕΔΟΜΕΝΩΝ
+#************************************ SOLUTION ΙLS ******************************************************************
+#               Αλγόριθμος τυχαίων υπο ακολουθιών με τοπική αναζήτηση
+# 1. Η πιο απλή μορφή τοπικής αναζήτησης. Επιλέγει δύο τυχαίες εργασίες από δυο τυχαία εργοστάσια και κάνει swap
+# Ο αλγόριθμος βρίσκει την καλύτερη λύση σε μικρά προβλήματα. Στα μεγαλύτερα προβλήματα δεν καταλήγει στην βέλτιστη λύση
+#********************************************************************************************************************
+print("<---------  ΑΛΓΟΡΙΘΜΟΣ   I L S --------->")
+bestTT = float("inf")
+for i in range(10000):
+    bestTT = ils.ils(d,n,m,p,startSeq, bestTT)
+print("FINAL BEST for I L S : [", bestTT , "]")    
+print()
 
+#************************************ SOLUTION RSLS ******************************************************************
+#               Αλγόριθμος τυχαίων υπο ακολουθιών με τοπική αναζήτηση Iterated Greedy Algorithm
+# 1. Ακολουθούνται οι διαδικασίες που περιγράφονται στο CODE 8 του συγγράμματος 
+# 
+#********************************************************************************************************************
+print("<---------  ΑΛΓΟΡΙΘΜΟΣ   R S L S --------->")
+bestTT = float("inf")
+for i in range(10000):
+    bestTT = rsls.rsls(d,n,m,p,startSeq, bestTT)
+print("FINAL BEST for R S L S : [", bestTT , "]")    
+print()    
+#************************************ SOLUTION RSLS with MLL Mechanism ******************************************************************
+#               
+# 
+#********************************************************************************************************************
+print("<---------  ΑΛΓΟΡΙΘΜΟΣ   R S L S with MLL --------->")
 
+#-
+
+#************************************ SOLUTION HYBRID GA WITH LS******************************************************************
+#               
+#
+#********************************************************************************************************************
+print("<---------  ΑΛΓΟΡΙΘΜΟΣ   GALS --------->")
+
+#-

@@ -42,3 +42,20 @@ def schedule(n_jobs, n_machines, p, solution):
 def makespan(job_sequence, C): # Με τους παρακάτω τελεστές παίρνουμε την τελευταία τιμή του πίνακα με τους χρόνους που αντιστοιχεί στον τελικό χρόνο εκτέλεσης
     return C[job_sequence[-1], -1]
 
+def calcTT(d,n,m,p,startSeq):
+
+    f = 0    
+    f=len(startSeq)
+
+    sumTT = 0
+    for fn in range(f):
+        FactoryC = schedule(n, m, p, startSeq[fn])
+        #print("FACTORY : [", fn ,"] -> ",startSeq[fn])
+        inTT = 0
+        for idJob, job in enumerate(startSeq[fn]):
+            inTT = FactoryC[startSeq[fn][idJob],-1] -  d[job]
+            if(inTT > 0):
+                sumTT = sumTT + inTT
+        sumTT - sumTT + sumTT
+    #print("SUMTT :", sumTT)
+    return sumTT

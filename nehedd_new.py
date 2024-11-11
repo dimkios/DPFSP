@@ -23,7 +23,7 @@ def nehedd(duedate, jobs, machines, p, Factories):
     
     #ΤΑΞΙΝΟΜΗΣΗ ΜΕ ΒΑΣΗ ΤΙΣ ΤΙΜΕΣ DUEDATES
     startSeq = utils.sort_by_dueDates(duedate) 
-    print("ΤΑΞΙΝΟΜΗΣΗ ΕΡΓΑΣΙΩΝ ΣΥΜΦΩΝΑ ΜΕ ΤΑ DUE DATES", startSeq)
+    #print("ΤΑΞΙΝΟΜΗΣΗ ΕΡΓΑΣΙΩΝ ΣΥΜΦΩΝΑ ΜΕ ΤΑ DUE DATES", startSeq)
 
     #workSequense = [startSeq[0]]
 
@@ -41,13 +41,12 @@ def nehedd(duedate, jobs, machines, p, Factories):
     # Τοποθέτηση πρώτων εργασιών στα εργοστάσια
     for f in range(Factories):                                  
         FactorySeq[f] = FactoryWorkSeq[f]
-        print(FactoryWorkSeq[f])
+        #print(FactoryWorkSeq[f])
 
     x=1
     pointer2 = 2
     #print("pointer", pointer2)
 
-    print("----start calc NEHedd----") 
     #Ξεκινάμε να επεξεργαζόμαστε τις εργασίες από το startpoint και μετά
     for i in range(startpoint, jobs):
         bestTime=float("inf") #Δίνουμε αρχική τιμή στον καλύτερο χρόνο μια πολύ μεγάλη τιμή
