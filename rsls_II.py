@@ -50,7 +50,8 @@ def rsls(d,n,m,p,startSeq, bestTT):
             # Choose a subSequence and insert it in a randomly startpoint
             if w < 0.5:                     
                 subseqLen = rand.randint(1, len(startSeq[fact])-1)
-                startpoint = rand.randint(0, len(startSeq[fact])-subseqLen)
+                startpoint1 = rand.randint(0, len(startSeq[fact])-subseqLen)
+                startpoint2 = rand.randint(0, len(startSeq[fact])-subseqLen)
                 subSeq = startSeq[fact][startpoint:subseqLen+startpoint]
                 del startSeq[fact][startpoint:subseqLen+startpoint]
                 newInsertPoint = rand.randint(0, len(startSeq[fact])-1)

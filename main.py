@@ -30,7 +30,7 @@ import time
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_5.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_4_2_1.txt')
 
-n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_3_8_2_1.txt')
+n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_2_16_3_3.txt')
 
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta001_2.txt')
 #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Large/Ta083_4.txt')
@@ -99,7 +99,7 @@ print()
 #********************************************************************************************************************
 print("<---------  ΑΛΓΟΡΙΘΜΟΣ   I L S --------->")
 bestTT = float("inf")
-for i in range(10000):
+for i in range(100000):
     bestTT = ils.ils(d,n,m,p,startSeq, bestTT)
 print("FINAL BEST for I L S : [", bestTT , "]")    
 print()
@@ -111,7 +111,7 @@ print()
 #********************************************************************************************************************
 print("<---------  ΑΛΓΟΡΙΘΜΟΣ   R S L S --------->")
 bestTT = float("inf")
-for i in range(10000):
+for i in range(100000):
     bestTT = rsls.rsls(d,n,m,p,startSeq, bestTT)
 print("FINAL BEST for R S L S : [", bestTT , "]")    
 print()    
