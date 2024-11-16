@@ -22,7 +22,7 @@ def nehedd(duedate, jobs, machines, p, Factories):
     FactoryC ={}
     
     #ΤΑΞΙΝΟΜΗΣΗ ΜΕ ΒΑΣΗ ΤΙΣ ΤΙΜΕΣ DUEDATES
-    startSeq = utils.sort_by_dueDates(duedate) 
+    startSeqNehedd = utils.sort_by_dueDates(duedate) 
     #print("ΤΑΞΙΝΟΜΗΣΗ ΕΡΓΑΣΙΩΝ ΣΥΜΦΩΝΑ ΜΕ ΤΑ DUE DATES", startSeq)
 
     #workSequense = [startSeq[0]]
@@ -31,7 +31,7 @@ def nehedd(duedate, jobs, machines, p, Factories):
     for f in range(Factories):
         FactoryC[f] = np.zeros((jobs, machines))                #Αρχικοποίηση πίνακα με τους χρόνους τερμαρισμού ακολουθιών 
         FactorySeq[f] = []                                      #Αρχικοποίηση πίνακα με τις ακολουθίες κάθε εργοστασίου
-        FactoryWorkSeq[f] = [startSeq[f]]                       #Αρχικοποίηση βοηθητικού πίνακα με ακολουθίες για ενδιάμεσες τιμές 
+        FactoryWorkSeq[f] = [startSeqNehedd[f]]                       #Αρχικοποίηση βοηθητικού πίνακα με ακολουθίες για ενδιάμεσες τιμές 
         FactoryWorkTime[f] = 0                                  #Αρχικοποίηση βοηθητικού πίνακα για ενδιάμεσες τιμές καθυστερήσεων
         startpoint = f+1                                        #Σημείο έναρξης τοποθέτησης επιπλέον εργασιών. Οι πρώτες εργασίες τοποθετούνται
                                                                 #μια μια στα εργοστάσια μέχρι κάθε εργοστάσιο να έχει από μια εργασία.
@@ -65,7 +65,7 @@ def nehedd(duedate, jobs, machines, p, Factories):
             for x in range(0, pointer2): 
                 #print("JOB ΤΟ POSITIONING: [", startSeq[i], "]" )
                 #print("FactoryWorkSeq[f] : [", FactoryWorkSeq[fnew],"] x=", x, " - startSeq[i] : ",  startSeq[i]) 
-                WorkSeq = utils.insertion(FactoryWorkSeq[fnew] , x, startSeq[i])
+                WorkSeq = utils.insertion(FactoryWorkSeq[fnew] , x, startSeqNehedd[i])
                 #print("WorkSeq : ", WorkSeq)
                 FactoryC = cS.schedule(jobs, machines, p, WorkSeq)
                 inTT = 0

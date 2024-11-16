@@ -15,10 +15,11 @@ import random as rand
 # Υπολογισμός Random Subsequence Local Search
 #********************************************************************************************************
 
-def ils(d,n,m,p,startSeq, bestTT):
-
+def ils(d,n,m,p,startSeqIls, bestTT):
+    
     startBest = bestTT
     bestTTnew = bestTT
+
     helpSeq ={}
     tempVal = 0
     fact1 = None
@@ -28,7 +29,7 @@ def ils(d,n,m,p,startSeq, bestTT):
     seqNr1 = 0
     seqNr2 = 0
 
-    f=len(startSeq)
+    f=len(startSeqIls)
 
     fact1 = rand.randint(0, f-1)
     fact2 = rand.randint(0, f-1)
@@ -41,17 +42,17 @@ def ils(d,n,m,p,startSeq, bestTT):
     #print("------------------------------------------------")
 
     
-    seqNr1 = len(startSeq[fact1])
+    seqNr1 = len(startSeqIls[fact1])
     randomSeq1 = rand.randint(0, seqNr1-1)
 
-    seqNr2 = len(startSeq[fact2])
+    seqNr2 = len(startSeqIls[fact2])
     randomSeq2 = rand.randint(0, seqNr2-1)
 
-    tempVal = startSeq[fact1][randomSeq1]
-    startSeq[fact1][randomSeq1] =  startSeq[fact2][randomSeq2]
-    startSeq[fact2][randomSeq2] =  tempVal
+    tempVal = startSeqIls[fact1][randomSeq1]
+    startSeqIls[fact1][randomSeq1] =  startSeqIls[fact2][randomSeq2]
+    startSeqIls[fact2][randomSeq2] =  tempVal
 
-    bestTTnew = cS.calcTT(d,n,m,p,startSeq)
+    bestTTnew = cS.calcTT(d,n,m,p,startSeqIls)
     
     if bestTTnew < bestTT:
         #print("START BEST:",startBest,"NEW BEST: ", bestTTnew)
@@ -85,4 +86,4 @@ def ils(d,n,m,p,startSeq, bestTT):
     #     sumTT - sumTT + sumTT
     # print("SUMTT :", sumTT)
     # print("Number Of Factories", f)
-    subSequence = {}
+  

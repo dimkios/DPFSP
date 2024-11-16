@@ -2,6 +2,7 @@ import utils
 import numpy as np
 import calcShedule as cS
 import random as rand
+import copy
 #=======================================================================================================
 #                    ΠΡΟΓΡΑΜΜΑ ΜΕΤΑΠΤΥΧΙΑΚΩΝ ΣΠΟΥΔΩΝ ΠΛΗΡΟΦΟΡΙΚΗΣ ΚΑΙ ΔΙΚΤΥΩΝ
 #                                    ΠΑΝΕΠΙΣΤΗΜΙΟ ΙΩΑΝΝΙΝΩΝ
@@ -20,6 +21,7 @@ def rsls(d,n,m,p,startSeq, bestTT):
     startBest = bestTT      #best Starting Time = bestTT
     bestTTnew = bestTT      #best TT new = bestTT
     helpSeq ={}
+    bestRSLSseq = {}
     subSeq = {}
     subSeq1 = {}
     subSeq2 = {}
@@ -30,7 +32,7 @@ def rsls(d,n,m,p,startSeq, bestTT):
     fact2 = None
     flag = True
     #print(startSeq)
-
+    bestRSLSseq = startSeq
 
     f=0
     seqNr1 = 0
@@ -48,19 +50,28 @@ def rsls(d,n,m,p,startSeq, bestTT):
             fact = rand.randint(0, f-1)     #Select one factory randomly
 
             # Choose a subSequence and insert it in a randomly startpoint
-            if w < 0.5:                     
-                subseqLen = rand.randint(1, len(startSeq[fact])-1)
+            if w < 0.5:              
+                if len(startSeq[fact]) < 2:
+                    subseqLen = 1
+                else:       
+                    subseqLen = rand.randint(1, len(startSeq[fact])-1)
                 startpoint = rand.randint(0, len(startSeq[fact])-subseqLen)
                 subSeq = startSeq[fact][startpoint:subseqLen+startpoint]
                 del startSeq[fact][startpoint:subseqLen+startpoint]
-                newInsertPoint = rand.randint(0, len(startSeq[fact])-1)
+                if len(startSeq[fact]) < 2:
+                    newInsertPoint = 1
+                else:
+                    newInsertPoint = rand.randint(0, len(startSeq[fact])-1)
                 new_list = startSeq[fact][:newInsertPoint] + subSeq + startSeq[fact][newInsertPoint:]
                 #print("FACTORIE : ", fact, "***",startSeq[fact]," *** SUBSEQLEN ----------->", subseqLen, "STARTPOINT:", startpoint , "SUBSEQUENCE =", subSeq, "NEWINSERTPOINT= ", newInsertPoint)
                 startSeq[fact] = new_list    
             # Choose a subSequence and reverse it    
             else:
                 #print("select subsequence and update sequence") 
-                subseqLen = rand.randint(1, len(startSeq[fact])-1)
+                if len(startSeq[fact]) < 2:
+                    subseqLen = 1
+                else:
+                    subseqLen = rand.randint(1, len(startSeq[fact])-1)
                 startpoint = rand.randint(0, len(startSeq[fact])-subseqLen)
                 startSeq[fact][startpoint:subseqLen+startpoint+1] = startSeq[fact][startpoint:subseqLen+startpoint+1][::-1] 
         # Choose two factories randomly        
@@ -76,8 +87,11 @@ def rsls(d,n,m,p,startSeq, bestTT):
                 subMaxLength = len(startSeq[fact2])
             else:
                 subMaxLength = len(startSeq[fact1])     
-            #print("MAXLENGTH = ", subMaxLength)                                #The nr of Jobs to be moved
-            subseqLen = rand.randint(1, subMaxLength-1)                         #Length of Sub Sequence
+            #print("MAXLENGTH = ", subMaxLength)   
+            if  subMaxLength < 2:                                               #The nr of Jobs to be moved
+                subseqLen = 1
+            else:
+                subseqLen = rand.randint(1, subMaxLength-1)                         #Length of Sub Sequence
             startpoint = rand.randint(0, subMaxLength-subseqLen)                #Start point to cut the sub sequence
 
             subSeq1 = startSeq[fact1][startpoint:subseqLen+startpoint]          #Select Subsequence of factory 1
@@ -108,7 +122,8 @@ def rsls(d,n,m,p,startSeq, bestTT):
                 #print("NEW FACTORY = ", fact2, "--> [", startSeq[fact2], "]")
         bestTTnew = cS.calcTT(d,n,m,p,startSeq)
         if bestTTnew < bestTT:
-            #print("START BEST:",startBest,"NEW BEST: ", bestTTnew)
+            #print("SEQUENCE", startSeq,"START BEST:",startBest,"NEW BEST: ", bestTTnew)
             bestTT = bestTTnew
+            bestRSLSseq = copy.deepcopy(startSeq) 
             flag = True
-    return bestTT
+    return bestTT, bestRSLSseq
