@@ -59,3 +59,17 @@ def calcTT(d,n,m,p,startSeq):
         sumTT - sumTT + sumTT
     #print("SUMTT :", sumTT)
     return sumTT
+
+
+def calcTToneFact(d,n,m,p,workSeq):
+    sumTT = 0
+    FactoryC = schedule(n, m, p, workSeq)
+    #print("FACTORY : [", fn ,"] -> ",startSeq[fn])
+    inTT = 0
+    for idJob, job in enumerate(workSeq):
+        inTT = FactoryC[workSeq[idJob],-1] -  d[job]
+        if(inTT > 0):
+            sumTT = sumTT + inTT
+        sumTT - sumTT + sumTT
+    #print("SUMTT :", sumTT)
+    return sumTT

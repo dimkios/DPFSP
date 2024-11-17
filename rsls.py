@@ -50,21 +50,29 @@ def rsls(d,n,m,p,startSeq, bestTT):
             fact = rand.randint(0, f-1)     #Select one factory randomly
 
             # Choose a subSequence and insert it in a randomly startpoint
-            if w < 0.5:              
-                if len(startSeq[fact]) < 2:
+            if w < 0.5:   
+                #print("FACTORY:", startSeq[fact]) 
+                if(len(startSeq[fact])<2):
                     subseqLen = 1
-                else:       
+                else:              
                     subseqLen = rand.randint(1, len(startSeq[fact])-1)
+                #print("SUBSEQLEN", subseqLen)
                 startpoint = rand.randint(0, len(startSeq[fact])-subseqLen)
+                #print("STARTPOINT =", startpoint)
                 subSeq = startSeq[fact][startpoint:subseqLen+startpoint]
                 del startSeq[fact][startpoint:subseqLen+startpoint]
+
+                #print("SUBSEQ:", subSeq, len(startSeq[fact]))
+
+
                 if len(startSeq[fact]) < 2:
                     newInsertPoint = 1
                 else:
                     newInsertPoint = rand.randint(0, len(startSeq[fact])-1)
                 new_list = startSeq[fact][:newInsertPoint] + subSeq + startSeq[fact][newInsertPoint:]
                 #print("FACTORIE : ", fact, "***",startSeq[fact]," *** SUBSEQLEN ----------->", subseqLen, "STARTPOINT:", startpoint , "SUBSEQUENCE =", subSeq, "NEWINSERTPOINT= ", newInsertPoint)
-                startSeq[fact] = new_list    
+                startSeq[fact] = new_list  
+                #print("NEW startSEQ", startSeq)  
             # Choose a subSequence and reverse it    
             else:
                 #print("select subsequence and update sequence") 
@@ -74,20 +82,23 @@ def rsls(d,n,m,p,startSeq, bestTT):
                     subseqLen = rand.randint(1, len(startSeq[fact])-1)
                 startpoint = rand.randint(0, len(startSeq[fact])-subseqLen)
                 startSeq[fact][startpoint:subseqLen+startpoint+1] = startSeq[fact][startpoint:subseqLen+startpoint+1][::-1] 
+                #print("startSeq", startSeq)
         # Choose two factories randomly        
         else:
             #print("Select 2 factories")
             fact1 = rand.randint(0, f-1)
             fact2 = rand.randint(0, f-1)
             while (fact1 == fact2):
-                fact2 = rand.randint(0, f-1)  
+                fact2 = rand.randint(0, f-1) 
+
+            
             #print("Choose subsequence and Starting point on each Factory [", fact1, "] - [", fact2 , "]")  
             #Select the less nr of jobs
             if(len(startSeq[fact1]) > len(startSeq[fact2])):
                 subMaxLength = len(startSeq[fact2])
             else:
                 subMaxLength = len(startSeq[fact1])     
-            #print("MAXLENGTH = ", subMaxLength)   
+                #print("MAXLENGTH = ", subMaxLength)   
             if  subMaxLength < 2:                                               #The nr of Jobs to be moved
                 subseqLen = 1
             else:
@@ -97,8 +108,12 @@ def rsls(d,n,m,p,startSeq, bestTT):
             subSeq1 = startSeq[fact1][startpoint:subseqLen+startpoint]          #Select Subsequence of factory 1
             subSeq2 = startSeq[fact2][startpoint:subseqLen+startpoint]          #Select Subsequence of factory 2
 
+            #print("subSeq1", subSeq1)
+            #print("subSeq2", subSeq2)
+
+
             if w < 0.5:
-                #print("SWAP SUB SEQUENCE BETWEEN FACTORIES")
+            #print("SWAP SUB SEQUENCE BETWEEN FACTORIES")
                 del startSeq[fact1][startpoint:subseqLen+startpoint]            #delete the subsequence of fact1
                 del startSeq[fact2][startpoint:subseqLen+startpoint]            #delete the subsequence of fact1
                 new_list1 = startSeq[fact1][:startpoint] + subSeq2 + startSeq[fact1][startpoint:]   #move the subsequence 2 in a temporary variable list 1
