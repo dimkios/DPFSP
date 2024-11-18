@@ -41,7 +41,14 @@ def load_files():
     #Δημιουργούμε μια δομή λεξικού της python στην οποία θα αποθηκεύσουμε τα ονόματα των αρχείων
     arxeia={}
     #Διαβάζουμε και ταξινομούμε όλα τα αρχεία που ξεκινούν με ta και βρίσκονται στον φάκελο Tailars-PFSP
-    for fn in sorted(glob.glob('./dataSet/I_*')):
+
+
+    files_ta = glob.glob('./dataSet/Ta*')
+    files_i = glob.glob('./dataSet/I_*')
+
+    all_files = sorted(files_ta + files_i)
+
+    for fn in all_files:
         arxeia[i]=fn
         i=i+1
     #επιστρέγει το αρχείο που επιλέγει ο χρήστης

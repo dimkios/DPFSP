@@ -1,18 +1,23 @@
 import loadfile as lf
-
 import nehedd_new as nhd_n
 import calcShedule as cS
 import ils
 import rsls
 import rsls_II as rs2
-import copy
-import time
 import ls_insertion_job as ls_ij
 import ls_move_job as ls_mv
 import ls_exchange_job as ls_xc
 
+import copy
+import os
+import csv
+
+import time
+
 from rich.console import Console
 from rich.table import Table
+from rich import print
+from rich import box
 
 from rich.progress import Progress
 
@@ -40,9 +45,7 @@ arxeia = lf.load_files()
 fileCnt = len(arxeia)
 #print(fileCnt)
 
-print("start ALGORITHM ARENA")
-
-table = Table(title="DPFSP ALGORITHM ARENA")
+table = Table(title="DPFSP ALGORITHM ARENA", style="bold")
 table.add_column("FILE", justify="center", style="cyan", no_wrap=True)
 table.add_column("FACTORIES", justify="center", style="cyan", no_wrap=True)
 table.add_column("JOBS")
@@ -54,15 +57,41 @@ table.add_column("RSLS II", justify="right", style="blue")
 table.add_column("LS insert", justify="right", style="blue")
 table.add_column("LS move", justify="right", style="blue")
 table.add_column("LS exchange", justify="right", style="blue")
+table.add_column("Best Result", justify="right", style="red", no_wrap=False)
+table.add_column("RPD", justify="right", style="bright_green", no_wrap=False)
 
 #ΦΟΡΤΩΣΗ DATASET
 with Progress() as progress:
+    print()
     task = progress.add_task("[cyan]ΕΚΤΕΛΕΣΗ ΑΛΓΟΡΙΘΜΩΝ για DPSFSP...", total=fileCnt)
         # Do something here
-      
+    start_time = time.time()  
     for i in range(fileCnt):
-        #print(arxeia[i+1])
+
         file = arxeia[i+1]
+
+        filename = os.path.basename(arxeia[i+1])
+
+        #print(filename)
+
+        if filename.startswith("I_"):
+            csv_file = "Best_Result_small.csv"
+        elif filename.startswith("Ta"):
+            csv_file = "Best_Result_large.csv"
+        else:
+            print(f"[red]Το αρχείο {filename} δεν είναι έγκυρο για αυτή τη διαδικασία![/red]")
+            continue
+
+        with open(csv_file, mode='r', newline='', encoding='utf-8') as csv_file_obj:
+            reader = csv.DictReader(csv_file_obj)
+            for row in reader:
+                if row['Instance'] == filename:
+                    best_value = row['Best']
+                    #console.print(f"[green]Η τιμή της στήλης 'Best' για το '{filename}' είναι: {best_value}[/green]")
+                    break
+                            
+
+
         n,m,F,p,d = lf.read_dpfsp_dataset(arxeia[i+1])
         #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_4_8_3_2.txt')
         #n,m,F,p,d = lf.read_dpfsp_dataset('./dataSet/Small/I_4_8_3_2.txt')
@@ -280,7 +309,24 @@ with Progress() as progress:
         #print()    
         bestLSexchange = bestTTexchange
 
-        table.add_row(file,str(F), str(n), str(m), str(bestNEHedd), str(bestILS), str(bestRSLS), str(bestRSLS_II), str(bestLSinsert), str(bestLSmove), str(bestLSexchange))
+        
+        if float(best_value) != 0:
+            sumAll = bestNEHedd + bestILS + bestRSLS + bestRSLS_II + bestLSinsert + bestLSmove + bestLSexchange
+
+            avgSum = sumAll / 7
+
+            RPD = (float(avgSum) - float(best_value)) / float(best_value) * 100 
+
+
+            #RPDneh = (bestNEHedd - float(best_value)) / float(best_value) * 100 
+            #print(f"Το RPDneh είναι: {RPDneh:.2f}%")
+        
+        #RPDneh = (bestNEHedd - float(best_value)) / float(best_value) * 100 
+
+
+        #str(bestILS)
+
+        table.add_row(file,str(F), str(n), str(m), str(bestNEHedd), str(bestILS), str(bestRSLS), str(bestRSLS_II), str(bestLSinsert), str(bestLSmove), str(bestLSexchange), str(best_value), str(RPD))
         #table.add_row(str(F), str(n), )
         #print("F=", F, "jobs=", n, "Machines=", m, "NEHEDD:", bestNEHedd, "ILS:", bestILS, "RSLS:", bestRSLS, "RSLS_II", bestRSLS_II, "LSinsert", bestLSinsert, "LSmove", bestLSmove, "LSexchange", bestLSexchange)
         progress.update(task, advance=1)
@@ -294,6 +340,12 @@ with Progress() as progress:
 
         # checkTT = cS.calcTT(d,n,m,p,factCheck)
         # print("SEQUENCE", factCheck, "CHECK TTTT", checkTT)
+    end_time = time.time()
+
+    execution_time = end_time - start_time
 
 console = Console()
+
+print()
 console.print(table)
+console.print(f"ΣΥΝΟΛΙΚΟΣ ΧΡΟΝΟΣ ΕΚΤΕΛΕΣΗΣ {execution_time:.2f} δευτερόλεπτα.")
