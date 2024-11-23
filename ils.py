@@ -2,6 +2,7 @@ import utils
 import numpy as np
 import calcShedule as cS
 import random as rand
+import copy
 #=======================================================================================================
 #                    ΠΡΟΓΡΑΜΜΑ ΜΕΤΑΠΤΥΧΙΑΚΩΝ ΣΠΟΥΔΩΝ ΠΛΗΡΟΦΟΡΙΚΗΣ ΚΑΙ ΔΙΚΤΥΩΝ
 #                                    ΠΑΝΕΠΙΣΤΗΜΙΟ ΙΩΑΝΝΙΝΩΝ
@@ -15,8 +16,8 @@ import random as rand
 # Υπολογισμός Random Subsequence Local Search
 #********************************************************************************************************
 
-def ils(d,n,m,p,startSeqIls, bestTT):
-    
+def ils(d,n,m,p,startSeq, bestTT):
+    startSeqIls = copy.deepcopy(startSeq)
     startBest = bestTT
     bestTTnew = bestTT
 
@@ -57,9 +58,9 @@ def ils(d,n,m,p,startSeqIls, bestTT):
     if bestTTnew < bestTT:
         #print("START BEST:",startBest,"NEW BEST: ", bestTTnew)
         bestTT = bestTTnew
-        return bestTTnew
+        return bestTTnew, startSeqIls
     else:
-        return bestTT
+        return bestTT, startSeqIls
         
     
 

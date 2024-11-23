@@ -31,7 +31,7 @@ def rsls_II(d,n,m,p,startSeq, bestTT):
     fact2 = None
     flag = True
     #print(startSeq)
-    bestRSLSseq = startSeq
+    bestRSLSseq = copy.deepcopy(startSeq)
 
     f=0
     seqNr1 = 0

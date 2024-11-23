@@ -29,6 +29,19 @@ def ls_insertion_job(d,n,m,p,startSeqls):
 
     #Εαν το εργοστάσιο έχει περισσότερες επό δυο εργασίες προχωράμε στην τοπική αναζήτηση
     #Διαφορετικά δεν έχει νόημα η τοπική αναζήτηση
+    startSeqls = insertion_Job_OneFact(d,n,m,p,startSeqls,fact)
+
+    #print("START SEQLS", startSeqls)
+
+    bestTTnew = cS.calcTT(d,n,m,p,startSeqls)
+    return startSeqls, bestTTnew
+
+
+
+def insertion_Job_OneFact(d,n,m,p,startSeqls,Factory):
+    selJobs = {} 
+    inJobs = {}   
+    fact = Factory
     if len(startSeqls[fact])>2:     
         #print("selected FACTORIE > 2 jobs:", startSeqls[fact])
         selJobs[0] = rand.randint(0, len(startSeqls[fact])-1)
@@ -67,8 +80,5 @@ def ls_insertion_job(d,n,m,p,startSeqls):
             workSequensels = bestSequence 
             #print("workSeq", workSequensels)
         startSeqls[fact] = workSequensels
-
-    bestTTnew = cS.calcTT(d,n,m,p,startSeqls)
-    return startSeqls, bestTTnew
-
+    return startSeqls 
 #===============================================================================================================
