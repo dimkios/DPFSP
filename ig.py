@@ -39,63 +39,63 @@ def ig(d,n,m,p,Factories,startSeqls):
     removed_jobs = []
 
 
-    π = copy.deepcopy(startSeqls)
-    bestTT = cS.calcTT(d,n,m,p,π)
-    #print("NEHedd = ", π, "with best TT", bestTT)
+    pi = copy.deepcopy(startSeqls)
+    bestTT = cS.calcTT(d,n,m,p,pi)
+    #print("NEHedd = ", pi, "with best TT", bestTT)
     
-    bestTT, π = rsls.rsls(d,n,m,p,π, bestTT)
-    bestTT = cS.calcTT(d,n,m,p,π)
-    #print("After Local Search",π, "with best TT",bestTT)
+    bestTT, pi = rsls.rsls(d,n,m,p,pi, bestTT)
+    bestTT = cS.calcTT(d,n,m,p,pi)
+    #print("After Local Search",pi, "with best TT",bestTT)
 
-    πb = copy.deepcopy(π)
+    pib = copy.deepcopy(pi)
 
     for iteration in range(max_iterations):
         removed_jobs = []
-        π_prime = π.copy()
-        
+        pi_prime = pi.copy()
+        print("iteration:", iteration)
         # Remove one job at a time
         range1 = djobs * n/Factories
 
         #print(int(range1))
         for _ in range(int(range1)):
-            random_factory = random.choice(list(π_prime.keys()))
+            random_factory = random.choice(list(pi_prime.keys()))
             #print("random Factory", random_factory)
-            if len(π_prime[random_factory]) > 0:
-                #removed_jobs = π_prime[random_factory].pop(random.randint(0, len(π_prime[random_factory]) - 1))
-                removed_jobs.append(π_prime[random_factory].pop(random.randint(0, len(π_prime[random_factory]) - 1)))
+            if len(pi_prime[random_factory]) > 0:
+                #removed_jobs = pi_prime[random_factory].pop(random.randint(0, len(pi_prime[random_factory]) - 1))
+                removed_jobs.append(pi_prime[random_factory].pop(random.randint(0, len(pi_prime[random_factory]) - 1)))
         
         #print("removed Jobs", removed_jobs)
         for job in removed_jobs:
             best_factory, best_position, min_tt = None, None, float('inf')
             for factory in range(Factories):
-                for position in range(len(π_prime[factory]) + 1):
-                    test_schedule = copy.deepcopy(π_prime)
+                for position in range(len(pi_prime[factory]) + 1):
+                    test_schedule = copy.deepcopy(pi_prime)
                     test_schedule[factory].insert(position, job)
                     tt = cS.calcTT(d,n,m,p,test_schedule)
                     #print("tt=", tt, "test_shedule=", test_schedule )
                     if tt < min_tt:
                         best_factory, best_position, min_tt = factory, position, tt
-            π_prime[best_factory].insert(best_position, job)
-            #print("π_prime", π_prime)
+            pi_prime[best_factory].insert(best_position, job)
+            #print("pi_prime", pi_prime)
         
         # Local search
-        bestTTIls2, π_prime = ils.ils(d,n,m,p, π_prime, bestTT)
-        ttπ_prime = cS.calcTT(d,n,m,p,π_prime)
-        ttπ = cS.calcTT(d,n,m,p,π)
-        ttπb = cS.calcTT(d,n,m,p,πb)
+        bestTTIls2, pi_prime = ils.ils(d,n,m,p, pi_prime, bestTT)
+        ttpi_prime = cS.calcTT(d,n,m,p,pi_prime)
+        ttpi = cS.calcTT(d,n,m,p,pi)
+        ttpib = cS.calcTT(d,n,m,p,pib)
 
 
-        #print("π", π, ttπ)
-        #print("π_prime", π_prime, ttπ_prime )
+        #print("pi", pi, ttpi)
+        #print("pi_prime", pi_prime, ttpi_prime )
         # Acceptance criteria
-        if ttπ_prime < ttπ:
-            π = copy.deepcopy(π_prime)
-            if ttπ < ttπb:
-                πb = copy.deepcopy(π_prime)
-        elif random.random() <= math.exp(-(ttπ_prime - ttπ) / T):
-            π = copy.deepcopy(π_prime)
-        #print("TELIKO P", π)
-    ttπb = cS.calcTT(d,n,m,p,πb)       
-    #print("pB", πb)     
+        if ttpi_prime < ttpi:
+            pi = copy.deepcopy(pi_prime)
+            if ttpi < ttpib:
+                pib = copy.deepcopy(pi_prime)
+        elif random.random() <= math.exp(-(ttpi_prime - ttpi) / T):
+            pi = copy.deepcopy(pi_prime)
+        #print("TELIKO P", pi)
+    ttpib = cS.calcTT(d,n,m,p,pib)       
+    #print("pB", pib, ttpib )     
 
-    return πb, ttπb
+    return pib, ttpib

@@ -47,6 +47,7 @@ def calcTT(d,n,m,p,startSeq):
     f = 0    
     f=len(startSeq)
 
+    
     sumTT = 0
     for fn in range(f):
         FactoryC = schedule(n, m, p, startSeq[fn])

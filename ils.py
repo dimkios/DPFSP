@@ -12,7 +12,7 @@ import copy
 #********************************************************************************************************
 #                                   ΚΙΟΣΣΕΣ ΔΗΜΗΤΡΙΟΣ ΑΜ 163
 #********************************************************************************************************
-#                                           rsls.py
+#                                           ILS.py
 # Υπολογισμός Random Subsequence Local Search
 #********************************************************************************************************
 
@@ -61,30 +61,3 @@ def ils(d,n,m,p,startSeq, bestTT):
         return bestTTnew, startSeqIls
     else:
         return bestTT, startSeqIls
-        
-    
-
-    # for fn in range(f):    
-    #     print("idFact", fn)
-    #     FactoryC = cS.schedule(n, m, p, startSeq[fn])
-    #     #print("FACTORY : [", fn ,"] -> ",startSeq[fn])
-    #     seqNr = 0
-    #     for idSeq, seq in enumerate(startSeq[fn]):
-    #         seqNr = seqNr+1
-    #         #print("Seq =", idSeq ,"and Seq Nr =", seqNr)
-    #         #print(startSeq[fn][idSeq])
-
-    #     #randomSeq = rand.randint(0, seqNr-1)
-    #     #print("random Nr = [", randomSeq , "]")
-
-
-
-    #     inTT = 0
-    #     for idJob, job in enumerate(startSeq[fn]):
-    #         inTT = FactoryC[startSeq[fn][idJob],-1] -  d[job]
-    #         if(inTT > 0):
-    #             sumTT = sumTT + inTT
-    #     sumTT - sumTT + sumTT
-    # print("SUMTT :", sumTT)
-    # print("Number Of Factories", f)
-  

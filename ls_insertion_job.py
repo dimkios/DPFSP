@@ -42,6 +42,8 @@ def insertion_Job_OneFact(d,n,m,p,startSeqls,Factory):
     selJobs = {} 
     inJobs = {}   
     fact = Factory
+    #print(startSeqls)
+    #print("startsqls", startSeqls[fact], fact, len(startSeqls[fact]))
     if len(startSeqls[fact])>2:     
         #print("selected FACTORIE > 2 jobs:", startSeqls[fact])
         selJobs[0] = rand.randint(0, len(startSeqls[fact])-1)

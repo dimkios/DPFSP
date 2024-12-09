@@ -8,6 +8,7 @@ import ls_insertion_job as ls_ij
 import ls_move_job as ls_mv
 import ls_exchange_job as ls_xc
 import ig
+import ga_ls as ga
 
 #
 import copy
@@ -45,9 +46,9 @@ fileCnt = len(arxeia)
 #rich table title
 table = Table(title="DPFSP ALGORITHM ARENA", style="bold")
 table.add_column("FILE", justify="center", style="cyan", no_wrap=True)
-table.add_column("FACTORIES", justify="center", style="cyan", no_wrap=True)
-table.add_column("JOBS")
-table.add_column("MACHINES")
+table.add_column("FACTORIES", justify="center", style="gold1", no_wrap=True)
+table.add_column("JOBS", justify="center", style="gold1")
+table.add_column("MACHINES", justify="center", style="gold1")
 table.add_column("NEHEDD", justify="right", style="blue")
 table.add_column("ILS", justify="right", style="blue")
 table.add_column("RSLS", justify="right", style="blue")
@@ -55,7 +56,8 @@ table.add_column("RSLS II", justify="right", style="blue")
 table.add_column("LS insert", justify="right", style="blue")
 table.add_column("LS move", justify="right", style="blue")
 table.add_column("LS exchange", justify="right", style="blue")
-table.add_column("IG", justify="right", style="blue")
+table.add_column("HYLG", justify="right", style="medium_spring_green")
+table.add_column("GA_LS", justify="right", style="medium_spring_green")
 table.add_column("Best Result", justify="right", style="red", no_wrap=False)
 table.add_column("RPD", justify="right", style="bright_green", no_wrap=False)
 
@@ -72,6 +74,8 @@ with Progress() as progress:
         file = arxeia[i+1]
         filename = os.path.basename(arxeia[i+1])
 
+        print("fileName =", filename)
+
         if filename.startswith("I_"):
             csv_file = "Best_Result_small.csv"
         elif filename.startswith("Ta"):
@@ -85,29 +89,10 @@ with Progress() as progress:
             for row in reader:
                 if row['Instance'] == filename:
                     best_value = row['Best']
-                    #console.print(f"[green]Η τιμή της στήλης 'Best' για το '{filename}' είναι: {best_value}[/green]")
                     break
                          
         n,m,F,p,d = lf.read_dpfsp_dataset(arxeia[i+1])
         startSequence = {}
-
-#************************************ LOAD DATASET ******************************************************************
-#               Φόρτωση δεδομένων από αρχεία. Αρχικώς χρησιμοποιούμε ένα ένα τα αρχεία
-#           Στην συνέχεια θα δοθούν επιλογές για το ποιά αρχεία θα φορτώσουμε καθώς επίσης και δυνατότητα
-#           φόρτωσης ενός συνόλου αρχείων.
-#********************************************************************************************************************
-
-        #print("============ dataset loaded ===============")
-        #for j in range(n):
-            #print("job=[",j,"]",  end="", flush=True)
-            #for i in range(m):
-                #print("machine=[", i,"] -> ", p[j,i], "-", end="", flush=True)
-            #print("duedate = ",j, d[j], "", end="", flush=True) 
-            #print() 
-        #print("============================================")   
-
-        #print("Factories:[", F, "] - Jobs: [", n, "] - machines: [", m ,"]")
-        #print()
 
 #************************************ SOLUTION neh update ******************************************************************
 #               ΥΠΟΛΟΓΙΣΜΟΣ ΤΗΣ ΚΑΛΥΤΕΡΗΣ ΑΚΟΛΟΥΘΙΑΣ ΣΥΜΦΩΝΑ ΜΕ ΤΟΝ NEHEDD όπως περιγράφεται στην εργασία
@@ -134,7 +119,8 @@ with Progress() as progress:
         if bestTT < bestTTnewI:
                 bestTTnewI = bestTT
                 bestSequence = copy.deepcopy(startSequence) 
-        for i in range(100000):
+        for i in range(10000):
+            print("ILS :", i)
             bestTT, bestSeq2 = ils.ils(d,n,m,p, startSequence, bestTT)
             if bestTT < bestTTnewI:
                 bestTTnewI = bestTT
@@ -152,6 +138,7 @@ with Progress() as progress:
         bestTTnewIRSLS = float("inf")
         
         for i in range(10000):
+            print("RSLS :", i)
             bestTTRSLS, startSequenceRSLS = rsls.rsls(d,n,m,p,startSequenceRSLS, bestTTRSLS)
             if bestTTRSLS < bestTTnewIRSLS:
                 bestTTnewIRSLS = bestTTRSLS
@@ -176,6 +163,7 @@ with Progress() as progress:
                 bestSequenceRSLSII = copy.deepcopy(startSequenceRSLSII) 
 
         for i in range(10000):
+            print("RSLS II :", i)
             checkSeqRS_II = copy.deepcopy(startNEHedd) 
             bestTTRSLSII, startSequenceRSLSII = rs2.rsls_II(d,n,m,p,checkSeqRS_II, bestTTRSLSII)
             if bestTTRSLSII < bestTTnewIRSLSII:
@@ -197,7 +185,8 @@ with Progress() as progress:
         sequence_InsertionJob = {}
         sequence_BestTime = {}
         bestTT = float("inf")
-        for i in range(100000):
+        for i in range(10):
+            print("LS in :", i)
             sequence_InsertionJob, bestTTnew=copy.deepcopy(ls_ij.ls_insertion_job(d,n,m,p,startSequenceLS_INSERTION_JOB))  
             if bestTTnew < bestTT:
                 bestTT = bestTTnew
@@ -213,7 +202,8 @@ with Progress() as progress:
         sequence_moveJob = {}
         sequence_BestTime_move = {}
         bestTTmove = float("inf")
-        for i in range(1000):
+        for i in range(10):
+            print("LS mv :", i)
             bestTTnewLSmove, startSequenceLSmove = ls_mv.ls_move_job(d,n,m,p,F,startSequenceLS_MOVE_JOB)
             if bestTTnewLSmove < bestTTmove:
                 bestTTmove = bestTTnewLSmove
@@ -233,7 +223,8 @@ with Progress() as progress:
         bestTTexchange = float("inf")
 
         sequence_exchangeJob, bestTTexchangeNew=copy.deepcopy(ls_xc.ls_exchange_job(d,n,m,p,F,startSequenceLS_EXCHANGE_JOB))  
-        for i in range(1000):
+        for i in range(10):
+            print("LS xc :", i)
             bestTTnewLSexchange, startSequenceLSexchange = ls_xc.ls_exchange_job(d,n,m,p,F,startSequenceLS_EXCHANGE_JOB)
             if bestTTnewLSexchange < bestTTexchange:
                 bestTTexchange = bestTTnewLSexchange
@@ -251,7 +242,7 @@ with Progress() as progress:
 
         
         startSeq_IG, bestTTIG = ig.ig(d,n,m,p,F,startSeq_IG)
-        
+        #print("ddddd",bestTTIG)
         # for i in range(10000):
         #     startSeq_IG, bestTTIG = ig.ig(d,n,m,p,F,startSeq_IG)
         #     if bestTTIG < bestTTnewIG:
@@ -260,17 +251,38 @@ with Progress() as progress:
         
 
 
-
+#************************************ GA LS solution******************************************************************
+#                                       ig.py
+# Εφαρμογή του αλγόριθμου Iterated Greedy Algorithm των RUIZ και STUETZLE προσαρμοσμένος σε Due dates
+#******************************************************************************************************************
+        startSeq_IG = copy.deepcopy(startNEHedd)
+        sequence_IG = {}
+        bestTTnewIG = float("inf")
+        bestTTGA = None
+        
+        startSeq_GA, bestTTGA = ga.ga(d,n,m,p,F,startSeq_IG)
+       
 #-------------------------------------------------------------------------------------------------------------------------------------------
-
+        RPD = 0
         if float(best_value) != 0:
+            RPD = 0
+            RPD_NEHEDD = 0
+            RPD_ILS = 0
+            RPD_RSLS = 0
+            RPD_RSLS_II = 0
+            RPD_LS_IN = 0
+            RPD_LS_MV = 0
+            RPD_LS_EX = 0
+            RPD_HYLG = 0
+            RPD_GA_LS = 0
+
             #sumAll = bestNEHedd + bestILS + bestRSLS + bestRSLS_II + bestLSinsert + bestLSmove + bestLSexchange
-            min_value = min(bestNEHedd, bestILS, bestRSLS, bestRSLS_II, bestLSinsert, bestLSmove, bestLSexchange, bestTTIG)
-            #avgSum = sumAll / 7
+            min_value = min(bestNEHedd, bestILS, bestRSLS, bestRSLS_II, bestLSinsert, bestLSmove, bestLSexchange, bestTTIG, bestTTGA)
+                #, bestTTGA            #avgSum = sumAll / 7
             RPD = (float(min_value) - float(best_value)) / float(best_value) * 100 
             RPD = round(RPD,2)
 
-        table.add_row(filename,str(F), str(n), str(m), str(bestNEHedd), str(bestILS), str(bestRSLS), str(bestRSLS_II), str(bestLSinsert), str(bestLSmove), str(bestLSexchange), str(bestTTIG), str(best_value), str(RPD))
+        table.add_row(filename,str(F), str(n), str(m), str(bestNEHedd), str(bestILS), str(bestRSLS), str(bestRSLS_II), str(bestLSinsert), str(bestLSmove), str(bestLSexchange), str(bestTTIG), str(bestTTGA), str(best_value), str(RPD))
         progress.update(task, advance=1)
     end_time = time.time()
     execution_time = end_time - start_time

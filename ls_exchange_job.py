@@ -55,8 +55,6 @@ def ls_exchange_job(d,n,m,p,Factories,startSeqls):
                 timiTTMIN = cS.calcTToneFact(d,n,m,p, startSeqls[min_index])
 
                 if (timiTTMAX < max_value) and (timiTTMIN < max_value):
-                    #print("BEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEST")
-                    #print("timiTTMAX =",timiTTMAX, "timiTTMIN =",timiTTMIN,"maxValue:", max_value)
                     max_value = max(timiTTMAX, timiTTMIN)
                     break
                 # Επαναφορά για να συνεχιστεί ο βρόχος (προαιρετικό)

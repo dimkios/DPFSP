@@ -254,6 +254,7 @@ with Progress() as progress:
 ###### WORKING AREA ######################
         startSeq_GA = copy.deepcopy(startNEHedd)
         bestTTGA = None
+        #startSeq_GA, bestTTGA = ga.ga(d,n,m,p,F,startSeq_GA)
         startSeq_GA, bestTTGA = ga.ga(d,n,m,p,F,startSeq_GA)
 
 
@@ -268,13 +269,14 @@ with Progress() as progress:
 
 
 #######################################################################################################################################
+        RPD = None
         if float(best_value) != 0:
             #sumAll = bestNEHedd + bestILS + bestRSLS + bestRSLS_II + bestLSinsert + bestLSmove + bestLSexchange
             #min_value = min(bestNEHedd, bestILS, bestRSLS, bestRSLS_II, bestLSinsert, bestLSmove, bestLSexchange)
             #avgSum = sumAll / 7
-            #RPD = (float(bestTTIG) - float(best_value)) / float(best_value) * 100 
-            #RPD = round(RPD,2)
-            RPD = None
+            RPD = (float(bestTTGA) - float(best_value)) / float(best_value) * 100 
+            RPD = round(RPD,2)
+            #RPD = None
 
         table.add_row(filename,str(F), str(n), str(m), str(bestNEHedd), str(bestILS), str(bestRSLS), str(bestRSLS_II), str(bestLSinsert), str(bestLSmove), str(bestLSexchange), str(bestTTGA), str(best_value), str(RPD))
         progress.update(task, advance=1)
