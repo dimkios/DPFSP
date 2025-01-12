@@ -73,10 +73,5 @@ def read_dpfsp_dataset(txtfile):
         for i, duetime in enumerate(map(int, lines[j+3+n].split())):
             d[j]=int(duetime)
                     
-    #print(x2)
-    #print("----------------------------")
-    #print(n)
-    #print(m)  
-    #print(F)    
-
+    
     return n, m, F, p, d

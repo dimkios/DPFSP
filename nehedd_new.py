@@ -23,7 +23,7 @@ def nehedd(duedate, jobs, machines, p, Factories):
     
     #ΤΑΞΙΝΟΜΗΣΗ ΜΕ ΒΑΣΗ ΤΙΣ ΤΙΜΕΣ DUEDATES
     startSeqNehedd = utils.sort_by_dueDates(duedate) 
-    #print("ΤΑΞΙΝΟΜΗΣΗ ΕΡΓΑΣΙΩΝ ΣΥΜΦΩΝΑ ΜΕ ΤΑ DUE DATES", startSeq)
+    print("ΤΑΞΙΝΟΜΗΣΗ ΕΡΓΑΣΙΩΝ ΣΥΜΦΩΝΑ ΜΕ ΤΑ DUE DATES", startSeqNehedd)
 
     #workSequense = [startSeq[0]]
 

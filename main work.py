@@ -130,8 +130,10 @@ with Progress() as progress:
 #********************************************************************************************************************
         startNEHedd = nhd_n.nehedd(d,n,m,p,F) 
         bestTT = cS.calcTT(d,n,m,p,startNEHedd)
-        bestNEHedd = bestTT
 
+        print("SEQ:", startNEHedd ,"-", bestTT)
+        bestNEHedd = bestTT
+        bestTTGA = bestNEHedd
 #************************************ SOLUTION ΙLS ******************************************************************
 #               Αλγόριθμος τυχαίων υπο ακολουθιών με τοπική αναζήτηση
 # 1. Η πιο απλή μορφή τοπικής αναζήτησης. Επιλέγει δύο τυχαίες εργασίες από δυο τυχαία εργοστάσια και κάνει swap
@@ -252,10 +254,10 @@ with Progress() as progress:
 #-------------------------------------------------------------------------------------------------------------------------------------------
 #######################################################################################################################################
 ###### WORKING AREA ######################
-        startSeq_GA = copy.deepcopy(startNEHedd)
-        bestTTGA = None
+        #startSeq_GA = copy.deepcopy(startNEHedd)
+        #bestTTGA = None
         #startSeq_GA, bestTTGA = ga.ga(d,n,m,p,F,startSeq_GA)
-        startSeq_GA, bestTTGA = ga.ga(d,n,m,p,F,startSeq_GA)
+        #startSeq_GA, bestTTGA = ga.ga(d,n,m,p,F,startSeq_GA)
 
 
         #print("===========================")

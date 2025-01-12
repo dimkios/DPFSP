@@ -35,28 +35,29 @@ def ig(d,n,m,p,Factories,startSeqls):
     bestTT = float("inf")
     minTT = float("inf")
 
-
     removed_jobs = []
-
 
     pi = copy.deepcopy(startSeqls)
     bestTT = cS.calcTT(d,n,m,p,pi)
-    #print("NEHedd = ", pi, "with best TT", bestTT)
     
     bestTT, pi = rsls.rsls(d,n,m,p,pi, bestTT)
     bestTT = cS.calcTT(d,n,m,p,pi)
-    #print("After Local Search",pi, "with best TT",bestTT)
 
     pib = copy.deepcopy(pi)
 
-    for iteration in range(max_iterations):
+    runTimerHYLG = n*m*0.25
+
+    startTimerHYLG = time.time()
+    timerHYLG = 0
+    i=0
+    #for iteration in range(max_iterations):
+    while timerHYLG < runTimerHYLG:
+        i = i+1     
         removed_jobs = []
         pi_prime = pi.copy()
-        print("iteration:", iteration)
         # Remove one job at a time
         range1 = djobs * n/Factories
 
-        #print(int(range1))
         for _ in range(int(range1)):
             random_factory = random.choice(list(pi_prime.keys()))
             #print("random Factory", random_factory)
@@ -94,8 +95,11 @@ def ig(d,n,m,p,Factories,startSeqls):
                 pib = copy.deepcopy(pi_prime)
         elif random.random() <= math.exp(-(ttpi_prime - ttpi) / T):
             pi = copy.deepcopy(pi_prime)
+
+        endTimerHYLG = time.time()
+        timerHYLG = endTimerHYLG - startTimerHYLG       
         #print("TELIKO P", pi)
     ttpib = cS.calcTT(d,n,m,p,pib)       
     #print("pB", pib, ttpib )     
-
+    print("HYLG :", i, "timer:", timerHYLG)
     return pib, ttpib

@@ -35,7 +35,7 @@ def ga(d,n,m,p,Factories,startSeqls):
     #GA PARAMETERS
     population_Size = 50
     generation = 0
-    generations = 100
+    generations = 50
     bestTTGARet = float("inf")
     bestSolution = {}
     child1 = {}
@@ -44,7 +44,7 @@ def ga(d,n,m,p,Factories,startSeqls):
     R2 = {}
     L1 = {}
     L2 = {}
-
+   
 
     #Create Population *****************************************
     population = create_population(population_Size, Factories, n)
@@ -55,12 +55,16 @@ def ga(d,n,m,p,Factories,startSeqls):
         #print("population: [", pop, "]", population[pop], "---", tt)
     population[19] = workingSeq_GA
 
+    runTimerGALS = n*m*0.25
 
-
-
-    for generation in range(generations):
-        #generation = generation+1
-        print("GENERATION: ", generation)
+    startTimerGALS = time.time()
+    timerGALS = 0
+    i=0
+    #for generation in range(generations):
+    while timerGALS < runTimerGALS:
+        i = i+1     
+        generation = generation+1
+        #print("GENERATION: ", generation)
         sorted_data = sorted(population_tt.items(), key=lambda item: item[1])   #Sort Population (Best to Worst)
         #print("Sorted Data Before LS", sorted_data)
         #*************************************************************
@@ -71,23 +75,23 @@ def ga(d,n,m,p,Factories,startSeqls):
         first_key, first_value = sorted_data[0]
         #print("sorted_data", first_key, first_value )
         #print(population[first_key])
-        print("IN LOCALSEARCH BEST")
+        #print("IN LOCALSEARCH BEST")
         workingSeq_GA = copy.deepcopy(population[first_key])
         workingSeq_GARet, bestTTGARet = localSearch(d,n,m,p,Factories, workingSeq_GA)
         population[first_key] = copy.deepcopy(workingSeq_GARet)
-        print("OUT LOCALSEARCH BEST")
+        #print("OUT LOCALSEARCH BEST")
         #**************************************************************
 
         #Take random Individual and do local Search********************
         #print("RANDOM INDIVIDUAL")
         selectPop = rand.randint(1, population_Size-1)
         #print(selectPop)
-        print("IN LOCALSEARCH INDIVIDUAL")
+        #print("IN LOCALSEARCH INDIVIDUAL")
         workingSeq_GA = copy.deepcopy(population[selectPop])
         workingSeq_GAInv, bestTTGAInv = localSearch(d,n,m,p,Factories, workingSeq_GA)
         population[selectPop] = copy.deepcopy(workingSeq_GAInv)
         #print("Individual:", population[selectPop], bestTTGAInv)
-        print("OUT LOCALSEARCH Individual")
+        #print("OUT LOCALSEARCH Individual")
         #**************************************************************
 
 
@@ -118,7 +122,7 @@ def ga(d,n,m,p,Factories,startSeqls):
         #print()
         #print("PARENT 1 =", len(parent1), parent1,  "PARENT 2 =", len(parent2), parent2)
 
-        print("crossover START")
+        #print("crossover START")
         if len(parent1) == len(parent2):
             for facts in range(len(parent1)):
                 #if len(parent1[facts]) >= 3:
@@ -193,7 +197,7 @@ def ga(d,n,m,p,Factories,startSeqls):
                     child2 = copy.deepcopy(fullCheck)  
                 population[-2] = child2   
             #print("child2:",child2)
-        print("crossover END")
+        #print("crossover END")
                     #print()
                     #print("child2", cS.calcTT(d,n,m,p,child2))
                     #child1[fact] = bestSequence
@@ -201,15 +205,16 @@ def ga(d,n,m,p,Factories,startSeqls):
         #print("child1", cS.calcTT(d,n,m,p,child1))    
         #print("child2", cS.calcTT(d,n,m,p,child1))    
 
-
-       
-        
-        
-
+        endTimerGALS = time.time()
+        timerGALS = endTimerGALS - startTimerGALS 
+    
     # Return the best Solution
     first_key, first_value = sorted_data[0]    
     workingSeq_GARet = copy.deepcopy(population[first_key])
     bestTTGARet = cS.calcTT(d,n,m,p, workingSeq_GARet)
+
+    print("GALS :", generation, "timer:", timerGALS)
+
     return workingSeq_GARet, bestTTGARet
 
 #######################################################################################################################################################    
@@ -237,45 +242,50 @@ def localSearch(d,n,m,p,Factories, workingSeq_GA):
     bestSequenseLS = copy.deepcopy(workingSeq_GA)
     ttBestLS = cS.calcTT(d,n,m,p,workingSeq_GA)
 
-    for rounds in range(100):
-        print("LS ROUND:", rounds)        
-        flag = True
+       
+    calcTimer = 0
+    start_time_ls = time.time()  
+    #for rounds in range(100):
+    #while runTimer > calcTimer:
+        #print("LS TIME:", time_ls)        
+    flag = True
+    for factory in range(Factories):
+        #print()
+        #print("factory->", factory, "round", rounds, "SEQUENCE",workingSeq_GA)
+        workingSeq_GA = ls_ij.insertion_Job_OneFact(d,n,m,p,workingSeq_GA,factory)
+    count = 0
+    while flag:
+        count = count+1
+        workingSeq_GA_check = copy.deepcopy(workingSeq_GA)
+        bestW, workingSeq_GA = ls_mv.ls_move_job(d,n,m,p,Factories,workingSeq_GA)
+        bestW, workingSeq_GA = ls_xc.ls_exchange_job(d,n,m,p,Factories,workingSeq_GA)
+        ttMid = cS.calcTT(d,n,m,p,workingSeq_GA)
+        #print("sequense Middle", workingSeq_GA, ttMid)
         for factory in range(Factories):
-            #print()
-            #print("factory->", factory, "round", rounds, "SEQUENCE",workingSeq_GA)
-            workingSeq_GA = ls_ij.insertion_Job_OneFact(d,n,m,p,workingSeq_GA,factory)
-        count = 0
-        while flag:
-            count = count+1
-            workingSeq_GA_check = copy.deepcopy(workingSeq_GA)
-            bestW, workingSeq_GA = ls_mv.ls_move_job(d,n,m,p,Factories,workingSeq_GA)
-            bestW, workingSeq_GA = ls_xc.ls_exchange_job(d,n,m,p,Factories,workingSeq_GA)
-            ttMid = cS.calcTT(d,n,m,p,workingSeq_GA)
-            #print("sequense Middle", workingSeq_GA, ttMid)
-            for factory in range(Factories):
-                if (workingSeq_GA_check[factory] == workingSeq_GA[factory]) or count > 20:
-                    #print ("same")
-                    flag = False
-                else:
-                    workingSeq_GA = ls_ij.insertion_Job_OneFact(d,n,m,p,workingSeq_GA,factory)
-                    print ("not same")
+            if (workingSeq_GA_check[factory] == workingSeq_GA[factory]) or count > 20:
+                #print ("same")
+                flag = False
+            else:
+                workingSeq_GA = ls_ij.insertion_Job_OneFact(d,n,m,p,workingSeq_GA,factory)
+                #print ("not same")
+    
+    bestTTGA = cS.calcTT(d,n,m,p,workingSeq_GA)
+    #print("sequense After", workingSeq_GA, bestTTGA)
+    if(bestTTGA < ttBestLS):
+        bestSolution = copy.deepcopy(workingSeq_GA) 
+        workingSeq_GARet = copy.deepcopy(workingSeq_GA) 
+        ttBestOveraAll = bestTTGA
+        bestTTGARet = bestTTGA
+        bestSequenseOverAll = copy.deepcopy(workingSeq_GA)
+        ttBestOveraAll = cS.calcTT(d,n,m,p,workingSeq_GA)
         
-        bestTTGA = cS.calcTT(d,n,m,p,workingSeq_GA)
-        #print("sequense After", workingSeq_GA, bestTTGA)
-        if(bestTTGA < ttBestLS):
-            bestSolution = copy.deepcopy(workingSeq_GA) 
-            workingSeq_GARet = copy.deepcopy(workingSeq_GA) 
-            ttBestOveraAll = bestTTGA
-            bestTTGARet = bestTTGA
-            bestSequenseOverAll = copy.deepcopy(workingSeq_GA)
-            ttBestOveraAll = cS.calcTT(d,n,m,p,workingSeq_GA)
-            
-            #print("***")
-            #print("FIND NEW BEST OVER ALL:",bestSequenseOverAll, "--", ttBestOveraAll)
-        else:
-            bestSolution = copy.deepcopy(bestSequenseLS) 
-            bestTTGARet = ttBestLS
-        
+        #print("***")
+        #print("FIND NEW BEST OVER ALL:",bestSequenseOverAll, "--", ttBestOveraAll)
+    else:
+        bestSolution = copy.deepcopy(bestSequenseLS) 
+        bestTTGARet = ttBestLS
+    end_Time_ls = time.time() 
+    calcTimer = end_Time_ls - start_time_ls
     return bestSolution, bestTTGARet
 
 

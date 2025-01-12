@@ -94,6 +94,9 @@ with Progress() as progress:
         n,m,F,p,d = lf.read_dpfsp_dataset(arxeia[i+1])
         startSequence = {}
 
+        runTimer = n*m*0.25
+
+
 #************************************ SOLUTION neh update ******************************************************************
 #               ΥΠΟΛΟΓΙΣΜΟΣ ΤΗΣ ΚΑΛΥΤΕΡΗΣ ΑΚΟΛΟΥΘΙΑΣ ΣΥΜΦΩΝΑ ΜΕ ΤΟΝ NEHEDD όπως περιγράφεται στην εργασία
 # 1. Δημιουργείται η ακολουθία startSeq σύμφωνα με την ταξινόμηση με το duedate. 
@@ -119,13 +122,22 @@ with Progress() as progress:
         if bestTT < bestTTnewI:
                 bestTTnewI = bestTT
                 bestSequence = copy.deepcopy(startSequence) 
-        for i in range(10000):
-            print("ILS :", i)
+
+        startTimerILS = time.time()
+        timerILS = 0
+        i=0
+        #for i in range(10000):
+        while timerILS < runTimer:    
+            i = i+1
+            #print("ILS :", i)
             bestTT, bestSeq2 = ils.ils(d,n,m,p, startSequence, bestTT)
             if bestTT < bestTTnewI:
                 bestTTnewI = bestTT
                 bestSequence = copy.deepcopy(startSequence) 
+            endTimerILS = time.time()
+            timerILS = endTimerILS - startTimerILS    
         bestILS = bestTT
+        print("ILS :", i, "timer:", timerILS)
 
 #************************************ SOLUTION RSLS ******************************************************************
 #              Αλγόριθμος τοπικής αναζήτησης με τυχαίες υποακολουθίες
@@ -137,14 +149,20 @@ with Progress() as progress:
         bestTTRSLS = float("inf")
         bestTTnewIRSLS = float("inf")
         
-        for i in range(10000):
-            print("RSLS :", i)
+        startTimerRSLS = time.time()
+        timerRSLS = 0
+        i=0
+        #for i in range(10000):
+        while timerRSLS < runTimer:     
+            i = i+1
             bestTTRSLS, startSequenceRSLS = rsls.rsls(d,n,m,p,startSequenceRSLS, bestTTRSLS)
             if bestTTRSLS < bestTTnewIRSLS:
                 bestTTnewIRSLS = bestTTRSLS
                 bestSequenceRSLS = copy.deepcopy(startSequenceRSLS) 
+            endTimerRSLS = time.time()
+            timerRSLS = endTimerRSLS - startTimerRSLS       
         bestRSLS = bestTTRSLS
-        
+        print("RSLS :", i, "timer:", timerRSLS)
 #************************************ SOLUTION RSLS II******************************************************************
 #           Αλγόριθμος τοπικής αναζήτησης με τυχαία σημεία
 # 1. Επιλέγεται τυχαίο εργοστάσιο ή 2 τυχαία εργοστάσια
@@ -162,15 +180,23 @@ with Progress() as progress:
                 bestTTnewIRSLSII = bestTTRSLSII
                 bestSequenceRSLSII = copy.deepcopy(startSequenceRSLSII) 
 
-        for i in range(10000):
-            print("RSLS II :", i)
+        startTimerRSLS2 = time.time()
+        timerRSLS2 = 0
+        i=0
+
+
+        #for i in range(10000):
+        while timerRSLS2 < runTimer:
+            i = i+1 
             checkSeqRS_II = copy.deepcopy(startNEHedd) 
             bestTTRSLSII, startSequenceRSLSII = rs2.rsls_II(d,n,m,p,checkSeqRS_II, bestTTRSLSII)
             if bestTTRSLSII < bestTTnewIRSLSII:
                 bestTTnewIRSLSII = bestTTRSLSII
                 bestSequenceRSLSII = copy.deepcopy(startSequenceRSLSII) 
+            endTimerRSLS2 = time.time()
+            timerRSLS2 = endTimerRSLS2 - startTimerRSLS2    
         bestRSLS_II = bestTTRSLSII
-        
+        print("RSLS2 :", i, "timer:", timerRSLS2)
 #************************************ SOLUTION HYBRID GA WITH LS******************************************************************
 #                                       ΓΕΝΕΤΙΚΟΣ ΑΛΓΟΡΙΘΜΟΣ
 #
@@ -185,14 +211,22 @@ with Progress() as progress:
         sequence_InsertionJob = {}
         sequence_BestTime = {}
         bestTT = float("inf")
-        for i in range(10):
-            print("LS in :", i)
+
+
+        startTimerLSIN = time.time()
+        timerLSIN = 0
+        i=0
+        #for i in range(10):
+        while timerLSIN < runTimer:
+            i = i+1     
             sequence_InsertionJob, bestTTnew=copy.deepcopy(ls_ij.ls_insertion_job(d,n,m,p,startSequenceLS_INSERTION_JOB))  
             if bestTTnew < bestTT:
                 bestTT = bestTTnew
                 sequence_BestTime = copy.deepcopy(sequence_InsertionJob)
+            endTimerLSIN = time.time()
+            timerLSIN = endTimerLSIN - startTimerLSIN 
         bestLSinsert = bestTT
-
+        print("LSIN :", i, "timer:", timerLSIN)
 #************************************ SUB SOLUTION LOCAL SEARCH II ******************************************************************
 #                                       ls_move_job.py
 # Τοπική αναζήτηση. Επιλέγουμε το εργοστάσιο με την μεγαλύτερη καθυστέρηση και το εργοστάσιο με την μικρότερη καθυστέρηση.
@@ -202,14 +236,23 @@ with Progress() as progress:
         sequence_moveJob = {}
         sequence_BestTime_move = {}
         bestTTmove = float("inf")
-        for i in range(10):
-            print("LS mv :", i)
+
+
+        startTimerLSMV = time.time()
+        timerLSMV = 0
+        i=0
+
+        #for i in range(10):
+        while timerLSMV < runTimer:
+            i = i+1     
             bestTTnewLSmove, startSequenceLSmove = ls_mv.ls_move_job(d,n,m,p,F,startSequenceLS_MOVE_JOB)
             if bestTTnewLSmove < bestTTmove:
                 bestTTmove = bestTTnewLSmove
                 bestSequenceLSmove = copy.deepcopy(startSequenceLSmove) 
+            endTimerLSMV = time.time()
+            timerLSMV = endTimerLSMV - startTimerLSMV 
         bestLSmove = bestTTmove
-
+        print("LSMV :", i, "timer:", timerLSMV)
 #************************************ SUB SOLUTION LOCAL SEARCH III ******************************************************************
 #                                       ls_exchange_job.py
 # Επιλέγουμε το εργοστάσιο με την μεγαλύτερη καθυστέρηση (maxFact) και το εργοστάσιο με την μικρότερη 
@@ -222,15 +265,25 @@ with Progress() as progress:
         sequence_BestTime_exchange = {}
         bestTTexchange = float("inf")
 
-        sequence_exchangeJob, bestTTexchangeNew=copy.deepcopy(ls_xc.ls_exchange_job(d,n,m,p,F,startSequenceLS_EXCHANGE_JOB))  
-        for i in range(10):
-            print("LS xc :", i)
+        sequence_exchangeJob, bestTTexchangeNew=copy.deepcopy(ls_xc.ls_exchange_job(d,n,m,p,F,startSequenceLS_EXCHANGE_JOB)) 
+
+        startTimerLSXC = time.time()
+        timerLSXC = 0
+        i=0
+
+
+
+        #for i in range(10):
+        while timerLSXC < runTimer:
+            i = i+1     
             bestTTnewLSexchange, startSequenceLSexchange = ls_xc.ls_exchange_job(d,n,m,p,F,startSequenceLS_EXCHANGE_JOB)
             if bestTTnewLSexchange < bestTTexchange:
                 bestTTexchange = bestTTnewLSexchange
                 bestSequenceLSexchange = copy.deepcopy(startSequenceLSexchange) 
+            endTimerLSXC = time.time()
+            timerLSXC = endTimerLSXC - startTimerLSXC     
         bestLSexchange = bestTTexchange
-
+        print("LSXC :", i, "timer:", timerLSXC)
 #************************************ IG solution******************************************************************
 #                                       ig.py
 # Εφαρμογή του αλγόριθμου Iterated Greedy Algorithm των RUIZ και STUETZLE προσαρμοσμένος σε Due dates
@@ -242,14 +295,6 @@ with Progress() as progress:
 
         
         startSeq_IG, bestTTIG = ig.ig(d,n,m,p,F,startSeq_IG)
-        #print("ddddd",bestTTIG)
-        # for i in range(10000):
-        #     startSeq_IG, bestTTIG = ig.ig(d,n,m,p,F,startSeq_IG)
-        #     if bestTTIG < bestTTnewIG:
-        #         bestTTnewIG = bestTTIG
-        #         bestSequenceIG = copy.deepcopy(startSeq_IG) 
-        
-
 
 #************************************ GA LS solution******************************************************************
 #                                       ig.py
